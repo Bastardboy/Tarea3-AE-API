@@ -10,4 +10,3 @@ def create_app():
     db.init_app(flask_app)
     db.create_all()
     return flask_app
-
