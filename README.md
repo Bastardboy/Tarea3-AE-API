@@ -1,5 +1,10 @@
 # Tarea3-AE-API
 
+## 👋 Aclaración
+
+La carpeta "tarea" es solo la creación de un entorno virtual, los archivos principales son Models, init y app.
+La carpeta "instance" se genera al momento de efectuar la ejecución de los archivos nombrados previamente.
+
 ## 🤝 Uso
 
 ## Validación
