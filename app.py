@@ -153,21 +153,6 @@ def getlocations(company_api_key):
             'message': 'Company not found.'
         })
 
-@app.route('/api/getlocation/<company_api_key>/<location_id>', methods=['GET'])
-def getlocation(company_api_key, location_id):
-    company = Company.query.filter_by(company_api_key=company_api_key).first()
-    print(company_api_key, location_id)
-    if company:
-        location = Location.query.filter_by(ID=location_id).first()
-        return jsonify({
-            'status': 'success',
-            'location': location.to_json()
-        })
-    else:
-        return jsonify({
-            'status': 'fail',
-            'message': 'Company not found.'
-        })
 
 
 
