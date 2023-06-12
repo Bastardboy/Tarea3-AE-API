@@ -3,7 +3,33 @@ from Models import Admin, Company, Location, Sensor, SensorData, db
 from init import create_app
 import time
 
-app= create_app()
+app = create_app()
+
+# Verificar la conexión a la base de datos
+with app.app_context():
+    try:
+        db.engine.connect()
+        print("Conexión exitosa a la base de datos.")
+    except Exception as e:
+        print("Error al conectar a la base de datos:", str(e))
+
+@app.route('/adminr', methods=['POST'])
+def create_admin():
+    if request.method == 'POST':
+        data = request.get_json()
+        if 'username' not in data or 'password' not in data:
+            return jsonify({'message': 'Invalid request. Please provide both username and password.'}), 400
+
+        username = data['username']
+        password = data['password']
+        admin = Admin(Username=username, Password=password)
+        print(admin)
+        db.session.add(admin)
+        db.session.commit()
+
+        return jsonify({'message': 'Admin created successfully', 'username': admin.Username}), 201
+
+
 
 @app.route('/admin', methods=['POST'])
 def validate_admin():
@@ -12,10 +38,12 @@ def validate_admin():
         username= data['username']
         password= data['password']
         admin = Admin.query.filter_by(Username=username, Password=password).first()
+        print(admin)
         if admin is None:
             return jsonify({'message': 'Username not found'})
         if admin:
             return jsonify({'message': 'Login successful'})
+        
         else:
             return jsonify({'message': 'Invalid password'})
 
@@ -43,10 +71,13 @@ def addcompany():
 
             db.session.add(company)
             db.session.commit()
+
+            company_id = company.ID
             return jsonify({
                 'status': 'success',
                 'message': 'Registered successfully.',
-                'token': company.generate_token()
+                'token': company.generate_token(),
+                'company_id': company_id
             })
 
 @app.route('/api/addlocation', methods=['POST'])
@@ -54,14 +85,15 @@ def addlocation():
     data = request.get_json()
     company_id = data['company_id']
     location_name = data['location_name']
-    location_country= data['location_country']
+    location_country = data['location_country']
     location_city = data['location_city']
     location_meta = data['location_meta']
-    user= data['user']
-    password= data['password']
-    
-    admin= Admin.query.filter_by(Username=user, Password=password).first()
-    
+    username = data['username']
+    password = data['password']
+
+    admin = Admin.query.filter_by(Username=username, Password=password).first()
+
+    print(admin)
     if admin:
         location = Location.query.filter_by(location_name=location_name).first()
         if location:
@@ -77,8 +109,10 @@ def addlocation():
             return jsonify({
                 'status': 'success',
                 'message': 'Registered successfully.',
-                'token': location.generate_token()
+                'token': location.generate_token(),
+                'location_id': location.ID
             })
+
 
 @app.route('/api/addsensor', methods=['POST'])
 def addsensor():
@@ -387,4 +421,4 @@ def deletesensordata():
         })
 
         
-app.run()
+app.run(port=5001)

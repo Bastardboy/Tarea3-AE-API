@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-db= SQLAlchemy()
+db = SQLAlchemy()
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class Admin(db.Model):
@@ -8,11 +8,11 @@ class Admin(db.Model):
     Username= db.Column(db.String(200), unique=True)
     Password= db.Column(db.String(200), unique=True)
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.Username
     def set_password(self, password):
-        self.password = generate_password_hash(password)
+        self.Password = generate_password_hash(password)
     def check_password(self, password):
-        return check_password_hash(self.password, password)
+        return check_password_hash(self.Password, password)
 
 
 class Company(db.Model):
@@ -21,7 +21,7 @@ class Company(db.Model):
     company_name= db.Column(db.String(200), nullable=False)
     company_api_key= db.Column(db.String(200), nullable=False)
     def __repr__(self):
-        return '<Company %r>' % self.nombre
+        return '<Company %r>' % self.company_name
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -43,7 +43,7 @@ class Location(db.Model):
     location_city= db.Column(db.String(200), nullable=False)
     location_meta= db.Column(db.String(200), nullable=False)
     def __repr__(self):
-        return '<Location %r>' % self.nombre
+        return '<Location %r>' % self.location_name
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -74,7 +74,7 @@ class Sensor(db.Model):
     sensor_meta= db.Column(db.String(200))
     sensor_api_key= db.Column(db.String(200))
     def __repr__(self):
-        return '<Sensor %r>' % self.nombre
+        return '<Sensor %r>' % self.sensor_name
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -103,7 +103,7 @@ class SensorData(db.Model):
     data= db.Column(db.String(200))
     date= db.Column(db.Integer, nullable=False)
     def __repr__(self):
-        return '<SensorData %r>' % self.nombre
+        return '<SensorData %r>' % self.data
     def save(self):
         db.session.add(self)
         db.session.commit()
